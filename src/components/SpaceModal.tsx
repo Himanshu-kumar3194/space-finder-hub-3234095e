@@ -58,8 +58,8 @@ export function SpaceModal({ space, isOpen, onClose }: SpaceModalProps) {
             <div className="flex items-center gap-3 p-3 bg-secondary/30 rounded-lg">
               <MapPin className="w-5 h-5 text-primary" />
               <div>
-                <p className="text-xs text-muted-foreground">Location</p>
-                <p className="font-medium">{space.location}</p>
+                <p className="text-xs text-muted-foreground">City & Area</p>
+                <p className="font-medium">{space.city}, {space.area}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 p-3 bg-secondary/30 rounded-lg">
@@ -67,6 +67,13 @@ export function SpaceModal({ space, isOpen, onClose }: SpaceModalProps) {
               <div>
                 <p className="text-xs text-muted-foreground">Capacity</p>
                 <p className="font-medium">{space.capacity} people</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 p-3 bg-secondary/30 rounded-lg col-span-2">
+              <MapPin className="w-5 h-5 text-accent" />
+              <div>
+                <p className="text-xs text-muted-foreground">Address</p>
+                <p className="font-medium">{space.location}</p>
               </div>
             </div>
           </div>

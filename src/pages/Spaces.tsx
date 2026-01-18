@@ -1,10 +1,11 @@
 import { useState, useMemo } from 'react';
 import { SpaceCard } from '@/components/SpaceCard';
 import { SpaceFilter } from '@/components/SpaceFilter';
+import { AdvancedFilters } from '@/components/AdvancedFilters';
 import { SpaceModal } from '@/components/SpaceModal';
 import { Header } from '@/components/Header';
-import { spacesData } from '@/data/spaces';
-import { Space, SpaceStatus } from '@/types/space';
+import { spacesData, priceRange } from '@/data/spaces';
+import { Space, SpaceStatus, AdvancedFilters as FiltersType } from '@/types/space';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
@@ -15,15 +16,37 @@ export default function Spaces() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSpace, setSelectedSpace] = useState<Space | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [advancedFilters, setAdvancedFilters] = useState<FiltersType>({
+    city: 'all',
+    area: 'all',
+    minBudget: priceRange.min,
+    maxBudget: priceRange.max,
+  });
 
   const filteredSpaces = useMemo(() => {
     return spacesData.filter((space) => {
-      const matchesFilter = activeFilter === 'all' || space.status === activeFilter;
+      // Status filter
+      const matchesStatus = activeFilter === 'all' || space.status === activeFilter;
+      
+      // Search filter
       const matchesSearch = space.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        space.location.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesFilter && matchesSearch;
+        space.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        space.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        space.area.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      // City filter
+      const matchesCity = advancedFilters.city === 'all' || space.city === advancedFilters.city;
+      
+      // Area filter
+      const matchesArea = advancedFilters.area === 'all' || space.area === advancedFilters.area;
+      
+      // Budget filter
+      const matchesBudget = space.priceValue >= advancedFilters.minBudget && 
+                           space.priceValue <= advancedFilters.maxBudget;
+      
+      return matchesStatus && matchesSearch && matchesCity && matchesArea && matchesBudget;
     });
-  }, [activeFilter, searchQuery]);
+  }, [activeFilter, searchQuery, advancedFilters]);
 
   const counts = useMemo(() => {
     return {
@@ -65,7 +88,7 @@ export default function Spaces() {
           </div>
 
           {/* Search & Filter */}
-          <div className="flex flex-col lg:flex-row gap-4 items-center justify-between mb-8">
+          <div className="flex flex-col lg:flex-row gap-4 items-center justify-between mb-6">
             <SpaceFilter
               activeFilter={activeFilter}
               onFilterChange={setActiveFilter}
@@ -83,12 +106,23 @@ export default function Spaces() {
               />
             </div>
           </div>
+
+          {/* Advanced Filters */}
+          <AdvancedFilters 
+            filters={advancedFilters} 
+            onFiltersChange={setAdvancedFilters} 
+          />
         </div>
       </section>
 
       {/* Spaces Grid */}
       <section className="pb-16">
         <div className="container mx-auto px-4">
+          {/* Results count */}
+          <p className="text-muted-foreground mb-4">
+            Showing {filteredSpaces.length} of {spacesData.length} spaces
+          </p>
+
           {filteredSpaces.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredSpaces.map((space, index) => (

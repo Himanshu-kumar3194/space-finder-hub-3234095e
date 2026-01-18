@@ -80,14 +80,17 @@ export function SpaceCard({ space, onClick }: SpaceCardProps) {
         </div>
 
         {/* Info Row */}
-        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+        <div className="flex flex-col gap-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-1.5">
             <MapPin className="w-4 h-4 text-primary" />
-            <span>{space.location}</span>
+            <span>{space.city}, {space.area}</span>
           </div>
-          <div className="flex items-center gap-1.5">
-            <Users className="w-4 h-4 text-primary" />
-            <span>{space.capacity} people</span>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1.5">
+              <Users className="w-4 h-4 text-primary" />
+              <span>{space.capacity} people</span>
+            </div>
+            <span className="text-xs text-muted-foreground/70">{space.location}</span>
           </div>
         </div>
 
