@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Link, useLocation } from 'react-router-dom';
-import { Zap, LayoutGrid, LogIn } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Zap, LayoutGrid, LogIn, Users } from 'lucide-react';
 
 export function Header() {
   const location = useLocation();
@@ -30,6 +29,16 @@ export function Header() {
             >
               <LayoutGrid className="w-4 h-4" />
               Spaces
+            </Button>
+          </Link>
+          <Link to="/sponsors">
+            <Button 
+              variant={location.pathname === '/sponsors' ? 'glow' : 'ghost'} 
+              size="sm"
+              className="gap-2"
+            >
+              <Users className="w-4 h-4" />
+              Sponsors
             </Button>
           </Link>
           <Link to="/auth">
